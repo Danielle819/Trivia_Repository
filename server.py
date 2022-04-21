@@ -175,13 +175,10 @@ def create_random_question(username):
 	questions_asked = users[username]["questions_asked"]
 	q_id = None
 
-	if len(questions_asked) == 0:
-		q_id = 1
-	else:
-		for key in questions_keys:
-			if key not in questions_asked:
-				q_id = key
-				break
+	for key in questions_keys:
+		if key not in questions_asked:
+			q_id = key
+			break
 
 	if q_id is None:
 		return None
@@ -217,6 +214,7 @@ def handle_answer_message(conn, username, answer):
 	try:
 		choice = int(choice)
 	except ValueError:
+		# the answer might be 'one' instead of 1 etc..
 		if choice not in STR_ANSWERS:
 			q = users[username]["questions_asked"]
 			q.remove(q[len(q) - 1])
@@ -333,9 +331,7 @@ def main():
 	global messages_to_send
 	global client_sockets
 
-	print("Welcome to the Haikyuu Trivia Server!")
-	print("Haikyuu is a sport anime and manga about volleyball.")
-	print("Enjoy!")
+	print("Welcome to the trivia server")
 
 	users = load_user_database()
 	questions = load_questions()
@@ -359,12 +355,6 @@ def main():
 					handle_logout_message(current_socket)
 					print(f"Connection with client {p_id} closed.")
 		send_waiting_messages(messages_to_send, wlist)
-
-
-
-
-
-
 
 
 if __name__ == '__main__':

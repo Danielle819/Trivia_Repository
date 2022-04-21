@@ -61,7 +61,7 @@ def login(conn):
         data = conn.recv(10019).decode()
         cmd, msg = chatlib.parse_message(data)
         if cmd == chatlib.PROTOCOL_SERVER["login_ok_msg"]:
-            print("\n----- LOGIN succeeded -----")
+            print("\n----- LOGIN succeeded -----\n\n\n")
             return
         if cmd == chatlib.PROTOCOL_SERVER["error_msg"]:
             print("\nLOGIN failed")
@@ -72,19 +72,19 @@ def get_score(conn):
     cmd, msg = build_send_recv_parse(conn, chatlib.PROTOCOL_CLIENT["my_score_msg"], "")
     if cmd != "YOUR_SCORE":
         print("\nERROR - score wasn't received")
-        print("command:", cmd, "message:", msg)
+        print("command:", cmd, "message:", msg + "\n\n\n")
     else:
-        print("\nscore:", msg)
+        print("\nmy score:", msg + "\n\n\n")
 
 
 def play_question(conn):
     q_cmd, q_msg = build_send_recv_parse(conn, chatlib.PROTOCOL_CLIENT["get_question_msg"], "")
     if q_cmd == chatlib.PROTOCOL_SERVER["no_question_msg"]:
-        print("\nthere are no more questions!")
+        print("\nthere are no more questions!" + "\n\n\n")
         return
     if q_cmd != chatlib.PROTOCOL_SERVER["your_question_msg"]:
         print("\nERROR - a question wasn't received")
-        print("command:", q_cmd, "message:", q_msg)
+        print("command:", q_cmd, "message:", q_msg + "\n\n\n")
         return
 
     question = q_msg.split("#")
@@ -98,35 +98,35 @@ def play_question(conn):
     a_cmd, a_msg = build_send_recv_parse(conn, chatlib.PROTOCOL_CLIENT["send_answer_msg"], answer)
 
     if a_cmd == chatlib.PROTOCOL_SERVER["correct_answer_msg"]:
-        print("\nCORRECT ANSWER! WELL DONE!")
+        print("\nCORRECT ANSWER! WELL DONE!\n\n\n")
     elif a_cmd == chatlib.PROTOCOL_SERVER["wrong_answer_msg"]:
-        print("\nyou were wrong. correct answer: ", a_msg)
+        print("\nyou were wrong. correct answer: ", a_msg + "\n\n\n")
     else:
         print("\nan ERROR has occurred.")
-        print("command:", a_cmd, "message:", a_msg)
+        print("command:", a_cmd, "message:", a_msg + "\n\n\n")
 
 
 def get_highscore(conn):
     cmd, msg = build_send_recv_parse(conn, chatlib.PROTOCOL_CLIENT["highscore_msg"], "")
     if cmd == chatlib.PROTOCOL_SERVER["all_score_msg"]:
-        print("\n" + msg)
+        print("\n" + msg + "\n\n\n")
     else:
         print("\nan error has occurred.")
-        print("command:", cmd, "message:", msg)
+        print("command:", cmd, "message:", msg + "\n\n\n")
 
 
 def get_logged_users(conn):
     cmd, msg = build_send_recv_parse(conn, chatlib.PROTOCOL_CLIENT["logged_msg"], "")
     if cmd == chatlib.PROTOCOL_SERVER["logged_answer_msg"]:
-        print("\n" + msg)
+        print("\n" + msg + "\n\n\n")
     else:
         print("\nan error has occurred.")
-        print("command:", cmd, "message:", msg)
+        print("command:", cmd, "message:", msg + "\n\n\n")
 
 
 def logout(conn):
     build_and_send_message(conn, chatlib.PROTOCOL_CLIENT["logout_msg"], "")
-    print("client LOGOUT")
+    print("CLIENT LOGOUT")
 
 
 def main():
@@ -134,22 +134,30 @@ def main():
     login(client_socket)
 
     print("\nWHAT DO YOU WANT TO DO?")
-    print("commands: S - get your score, Q - get a question, H - get the scores table")
-    print("          U - get all the logged users, L - logout")
+    print("commands: Q - get a question")
+    print("          S - get your score")
+    print("          H - get the scores table")
+    print("          U - get all the logged users")
+    print("          L - logout")
     cmd = input("your command: ")
-    while cmd != 'L':
-        if cmd == "S":
+
+    while cmd != 'L' and cmd != "l":
+        if cmd == "S" or cmd == "s":
             get_score(client_socket)
-        elif cmd == "Q":
+        elif cmd == "Q" or cmd == "q":
             play_question(client_socket)
-        elif cmd == "H":
+        elif cmd == "H" or cmd == "h":
             get_highscore(client_socket)
-        elif cmd == "U":
+        elif cmd == "U" or cmd == "u":
             get_logged_users(client_socket)
         else:
             print("invalid answer. try again.")
-        print("\ncommands: S - get your score, Q - get a question, H - get the scores table")
-        print("          U - get all the logged users, L - logout")
+
+        print("\ncommands: Q - get a question")
+        print("          S - get your score")
+        print("          H - get the scores table")
+        print("          U - get all the logged users")
+        print("          L - logout")
         cmd = input("WHAT DO YOU WANT TO DO? ")
     logout(client_socket)
     client_socket.close()
