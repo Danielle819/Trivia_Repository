@@ -64,7 +64,7 @@ def login(conn):
             print("\n----- LOGIN succeeded -----\n\n\n")
             return
         if cmd == chatlib.PROTOCOL_SERVER["error_msg"]:
-            print("\nLOGIN failed")
+            print("\n----- LOGIN failed -----")
             print(msg)
 
 
@@ -118,7 +118,7 @@ def get_highscore(conn):
 def get_logged_users(conn):
     cmd, msg = build_send_recv_parse(conn, chatlib.PROTOCOL_CLIENT["logged_msg"], "")
     if cmd == chatlib.PROTOCOL_SERVER["logged_answer_msg"]:
-        print("\n" + msg + "\n\n\n")
+        print("\nlogged users: " + msg + "\n\n\n")
     else:
         print("\nan error has occurred.")
         print("command:", cmd, "message:", msg + "\n\n\n")

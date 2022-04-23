@@ -150,7 +150,7 @@ def handle_gethighscore_message(conn):
 
 	highscore = ""
 	for user in users:
-		highscore += user + ": " + str(users[user]["score"]) + "\n"
+		highscore += user + " " + str(users[user]["score"]) + "\n"
 
 	build_and_send_message(conn, chatlib.PROTOCOL_SERVER["all_score_msg"], highscore)
 
@@ -292,10 +292,10 @@ def handle_client_message(conn, cmd, data):
 			if username not in logged_users.values():
 				handle_login_message(conn, data)
 			else:
-				send_error(conn, "User already logged in")
+				send_error(conn, "User is already logged in")
 			return
 		else:
-			send_error(conn, "User not connected")
+			send_error(conn, "User was not connected")
 			return
 
 	username = logged_users[conn.getpeername()]
